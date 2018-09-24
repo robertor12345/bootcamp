@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using BootcampSoftwareEngineeringToolsAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BootcampSoftwareEngineeringToolsAPI.Controllers
@@ -11,34 +10,54 @@ namespace BootcampSoftwareEngineeringToolsAPI.Controllers
     {
         // GET api/values
         [HttpGet]
-        public IEnumerable<string> Get()
+        public List<Person> Get()
         {
-            return new string[] { "value1", "value2" };
+            return ValueStore.GetPeople();
         }
 
         // GET api/values/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("{name}")]
+        public string Get(string name)
         {
-            return "value";
+            try
+            {
+                var value = ValueStore.FindPerson(name);
+
+                return value.Name;
+            }
+            catch (Exception)
+            {
+                return "person not found";
+            }
         }
 
         // POST api/values
+
         [HttpPost]
-        public void Post([FromBody]string value)
+        public IActionResult Post([FromBody] Person person)
         {
+            ValueStore.StorePerson(person);
+
+            return Ok();
         }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
 
         // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+
+        [HttpDelete("{name}")]
+        public IActionResult Delete(string name)
         {
+            ValueStore.DeletePerson(name);
+
+            return Ok();
+        }
+
+        [HttpDelete("{deleteall}")]
+        public IActionResult Purge()
+        {
+            ValueStore.PurgeAllPeople();
+
+            return Ok();
         }
     }
 }
