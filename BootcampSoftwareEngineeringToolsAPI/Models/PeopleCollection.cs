@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 
 namespace BootcampSoftwareEngineeringToolsAPI.Models
 {
-    public static class MyList
+    public static class PeopleCollection
     {
-        public static List<Person> PeopleList { get; set; }
+        public static List<Person> People { get; set; }
 
-        static MyList()
+        static PeopleCollection()
         {
-            PeopleList = new List<Person>();
+            People = new List<Person>();
         }
     }
 }

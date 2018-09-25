@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using BootcampSoftwareEngineeringToolsAPI.Models;
+using Microsoft.AspNetCore.Diagnostics.Views;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BootcampSoftwareEngineeringToolsAPI.Controllers
@@ -10,18 +11,28 @@ namespace BootcampSoftwareEngineeringToolsAPI.Controllers
     {
         // GET api/values
         [HttpGet]
-        public List<Person> Get()
+        public string Get()
         {
-            return ValueStore.GetPeople();
+            var people = PeopleDatabase.GetPeople();
+
+            if (people.Count==0)
+            {
+                return "No people yet!";
+            }
+            var peopleDescription = PrintPeople(people);
+
+            return peopleDescription;
         }
 
-        // GET api/values/5
+
+        // GET api/values/name
+
         [HttpGet("{name}")]
         public string Get(string name)
         {
             try
             {
-                var value = ValueStore.FindPerson(name);
+                var value = PeopleDatabase.FindPerson(name);
 
                 return value.Name;
             }
@@ -31,33 +42,50 @@ namespace BootcampSoftwareEngineeringToolsAPI.Controllers
             }
         }
 
+
         // POST api/values
 
         [HttpPost]
         public IActionResult Post([FromBody] Person person)
         {
-            ValueStore.StorePerson(person);
+            PeopleDatabase.StorePerson(person);
 
             return Ok();
         }
 
 
-        // DELETE api/values/5
+        // DELETE api/values/name
 
         [HttpDelete("{name}")]
         public IActionResult Delete(string name)
         {
-            ValueStore.DeletePerson(name);
+            PeopleDatabase.DeletePerson(name);
 
             return Ok();
         }
 
+
+        // DELETE api/values/deleteall
+
         [HttpDelete("{deleteall}")]
         public IActionResult Purge()
         {
-            ValueStore.PurgeAllPeople();
+            PeopleDatabase.PurgeAllPeople();
 
             return Ok();
+        }
+
+
+        private static string PrintPeople(List<Person> people)
+        {
+            var peopleDescription = "Welcome to ASOS: ";
+
+            foreach (var person in people)
+            {
+                peopleDescription += person.Name + " ";
+            }
+
+            return peopleDescription;
         }
     }
 }

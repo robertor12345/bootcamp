@@ -6,33 +6,33 @@ using System.Threading.Tasks;
 
 namespace BootcampSoftwareEngineeringToolsAPI.Models
 {
-    public static class ValueStore
+    public static class PeopleDatabase
     {
 
         public static void StorePerson(Person person)
         {
-            MyList.PeopleList.Add(person);
+            PeopleCollection.People.Add(person);
         }
 
         public static List<Person> GetPeople()
         {
-            return MyList.PeopleList;
+            return PeopleCollection.People;
         }
 
         public static void DeletePerson(string name)
         {
-            MyList.PeopleList.RemoveAll(person => person.Name ==name);
+            PeopleCollection.People.RemoveAll(person => person.Name ==name);
         }
 
         public static void PurgeAllPeople()
         {
-            MyList.PeopleList.RemoveAll(person => true);
+            PeopleCollection.People.RemoveAll(person => true);
         }
 
 
         public static Person FindPerson(string name)
         {
-            return MyList.PeopleList.Find(person => person.Name == name);
+            return PeopleCollection.People.Find(person => person.Name == name);
         }
     }
 }
