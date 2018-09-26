@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
 using BootcampSoftwareEngineeringToolsAPI.Models;
+using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BootcampSoftwareEngineeringToolsAPI.Controllers
@@ -15,6 +19,8 @@ namespace BootcampSoftwareEngineeringToolsAPI.Controllers
             var people = PeopleDatabase.GetPeople();
 
             if (people.Count == 0) return "No people yet!";
+
+            WriteTraceToAppInsights($"returned all records to client", SeverityLevel.Information);
             var peopleDescription = PrintPeople(people);
 
             return peopleDescription;
@@ -28,12 +34,14 @@ namespace BootcampSoftwareEngineeringToolsAPI.Controllers
         {
             try
             {
-                var value = PeopleDatabase.FindPerson(name);
+                var person = PeopleDatabase.FindPerson(name);
+                WriteTraceToAppInsights($"Found {name} in database", SeverityLevel.Information);
 
-                return value.Name;
+                return person.FirstName;
             }
             catch (Exception)
             {
+                WriteTraceToAppInsights($"{name} not found in database", SeverityLevel.Information);
                 return "person not found";
             }
         }
@@ -44,7 +52,16 @@ namespace BootcampSoftwareEngineeringToolsAPI.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] Person person)
         {
-            PeopleDatabase.StorePerson(person);
+            try
+            {
+                PeopleDatabase.StorePerson(person);
+                WriteTraceToAppInsights($"Stored {person.FirstName} to database", SeverityLevel.Information);
+            }
+            catch (NullReferenceException exception)
+            {
+                WriteTraceToAppInsights("Badly formed JSON in request to BootCampAPI", SeverityLevel.Error);
+                return BadRequest();
+            }
 
             return Ok();
         }
@@ -55,6 +72,9 @@ namespace BootcampSoftwareEngineeringToolsAPI.Controllers
         [HttpDelete("{name}")]
         public IActionResult Delete(string name)
         {
+
+            WriteTraceToAppInsights($"Deleted {name} from database", SeverityLevel.Information);
+
             PeopleDatabase.DeletePerson(name);
 
             return Ok();
@@ -68,7 +88,15 @@ namespace BootcampSoftwareEngineeringToolsAPI.Controllers
         {
             PeopleDatabase.PurgeAllPeople();
 
+            WriteTraceToAppInsights("Deleted all records", SeverityLevel.Information);
+
             return Ok();
+        }
+
+        private void WriteTraceToAppInsights(string message, SeverityLevel severityLevel)
+        {
+            var telemetry = new Microsoft.ApplicationInsights.TelemetryClient();
+            telemetry.TrackTrace(message, severityLevel);
         }
 
 
@@ -76,7 +104,7 @@ namespace BootcampSoftwareEngineeringToolsAPI.Controllers
         {
             var peopleDescription = "Welcome to ASOS: ";
 
-            foreach (var person in people) peopleDescription += person.Name + " ";
+            foreach (var person in people) peopleDescription += $"Name {person.FirstName} {person.LastName} RandomFact: {person.RandomFact}" + System.Environment.NewLine;
 
             return peopleDescription;
         }

@@ -16,7 +16,7 @@ namespace BootcampSoftwareEngineeringToolsAPI.Models
 
         public static void DeletePerson(string name)
         {
-            PeopleCollection.People.RemoveAll(person => person.Name == name);
+            PeopleCollection.People.RemoveAll(person => person.FirstName == name);
         }
 
         public static void PurgeAllPeople()
@@ -27,7 +27,7 @@ namespace BootcampSoftwareEngineeringToolsAPI.Models
 
         public static Person FindPerson(string name)
         {
-            return PeopleCollection.People.Find(person => person.Name == name);
+            return PeopleCollection.People.Find(person => person.FirstName == name);
         }
     }
 }
