@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace BootcampSoftwareEngineeringToolsAPI.Models
 {
     public static class PeopleDatabase
     {
-
         public static void StorePerson(Person person)
         {
             PeopleCollection.People.Add(person);
@@ -21,7 +16,7 @@ namespace BootcampSoftwareEngineeringToolsAPI.Models
 
         public static void DeletePerson(string name)
         {
-            PeopleCollection.People.RemoveAll(person => person.Name ==name);
+            PeopleCollection.People.RemoveAll(person => person.Name == name);
         }
 
         public static void PurgeAllPeople()

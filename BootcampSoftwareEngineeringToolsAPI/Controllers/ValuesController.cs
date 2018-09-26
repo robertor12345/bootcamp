@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using BootcampSoftwareEngineeringToolsAPI.Models;
-using Microsoft.AspNetCore.Diagnostics.Views;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BootcampSoftwareEngineeringToolsAPI.Controllers
@@ -15,10 +14,7 @@ namespace BootcampSoftwareEngineeringToolsAPI.Controllers
         {
             var people = PeopleDatabase.GetPeople();
 
-            if (people.Count==0)
-            {
-                return "No people yet!";
-            }
+            if (people.Count == 0) return "No people yet!";
             var peopleDescription = PrintPeople(people);
 
             return peopleDescription;
@@ -80,10 +76,7 @@ namespace BootcampSoftwareEngineeringToolsAPI.Controllers
         {
             var peopleDescription = "Welcome to ASOS: ";
 
-            foreach (var person in people)
-            {
-                peopleDescription += person.Name + " ";
-            }
+            foreach (var person in people) peopleDescription += person.Name + " ";
 
             return peopleDescription;
         }
