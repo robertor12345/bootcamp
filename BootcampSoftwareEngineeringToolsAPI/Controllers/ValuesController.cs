@@ -71,9 +71,10 @@ namespace BootcampSoftwareEngineeringToolsAPI.Controllers
         [HttpDelete("{name}")]
         public IActionResult Delete(string name)
         {
-            Telemetry.WriteTraceToAppInsights($"Deleted {name} from database", SeverityLevel.Information);
-
+           
             PeopleDatabase.DeletePerson(name);
+
+            Telemetry.WriteTraceToAppInsights($"Deleted {name} from database", SeverityLevel.Information);
 
             return Ok();
         }
