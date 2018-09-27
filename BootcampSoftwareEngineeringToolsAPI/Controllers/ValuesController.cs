@@ -33,9 +33,9 @@ namespace BootcampSoftwareEngineeringToolsAPI.Controllers
             {
                 var person = PeopleDatabase.FindPerson(name);
 
-                Telemetry.WriteTraceToAppInsights($"Found {name} in database", SeverityLevel.Information);
+                Telemetry.WriteTraceToAppInsights($"Found {person.FirstName} in database", SeverityLevel.Information);
 
-                return $"{person.FirstName} {person.LastName}";
+                return PeoplePrinter.PrintPerson(person);
             }
             catch (Exception)
             {
@@ -56,7 +56,7 @@ namespace BootcampSoftwareEngineeringToolsAPI.Controllers
                 PeopleDatabase.StorePerson(person);
                 Telemetry.WriteTraceToAppInsights($"Stored {person.FirstName} to database", SeverityLevel.Information);
             }
-            catch (NullReferenceException exception)
+            catch (NullReferenceException)
             {
                 Telemetry.WriteTraceToAppInsights("Badly formed JSON in request to BootCampAPI", SeverityLevel.Error);
                 return BadRequest();

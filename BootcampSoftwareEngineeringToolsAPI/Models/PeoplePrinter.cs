@@ -11,8 +11,17 @@ namespace BootcampSoftwareEngineeringToolsAPI.Models
                                     Environment.NewLine;
 
             foreach (var person in people)
-                peopleDescription += $"Name {person.FirstName} {person.LastName} RandomFact: {person.RandomFact}" +
+                peopleDescription += $"Name {person.FirstName} {person.LastName} '{person.RandomFact}'" +
                                      Environment.NewLine;
+
+            return peopleDescription;
+        }
+
+        public static string PrintPerson(Person person)
+        {
+            var peopleDescription = "Welcome to ASOS: ";
+
+            peopleDescription += $"Name {person.FirstName} {person.LastName} '{person.RandomFact}'";
 
             return peopleDescription;
         }
